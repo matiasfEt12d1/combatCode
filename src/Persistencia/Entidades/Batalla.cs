@@ -1,12 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+namespace Persistencia.Entidades;
 
-namespace Persistencia.Entidades
+public class Batalla
 {
-    public class Batalla
-    {
-        
-    }
+    
 }

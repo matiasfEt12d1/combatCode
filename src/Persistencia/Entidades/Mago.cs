@@ -1,36 +1,30 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+namespace Persistencia.Entidades;
 
-namespace Persistencia.Entidades
+public class Mago
 {
-    public class Mago
+    private int _manaActual;
+    private readonly int _manaMaximo;
+
+    public int ManaActual => _manaActual;
+
+    public Mago(string nombre, double vidaMaxima, double fuerzaBase, int manaMaximo)
+        : base(nombre, vidaMaxima, fuerzaBase)
     {
-        private int _manaActual;
-        private readonly int _manaMaximo;
+        if (manaMaximo <= 0)
+            throw new ArgumentOutOfRangeException(nameof(manaMaximo), "El mana máximo debe ser mayor a cero.");
 
-        public int ManaActual => _manaActual;
+        _manaMaximo = manaMaximo;
+        _manaActual = manaMaximo;
+    }
 
-        public Mago(string nombre, double vidaMaxima, double fuerzaBase, int manaMaximo)
-            : base(nombre, vidaMaxima, fuerzaBase)
-        {
-            if (manaMaximo <= 0)
-                throw new ArgumentOutOfRangeException(nameof(manaMaximo), "El mana máximo debe ser mayor a cero.");
+    public override double CalcularDanioAtaqueBásico() => FuerzaBase * 0.8;
 
-            _manaMaximo = manaMaximo;
-            _manaActual = manaMaximo;
-        }
+    public override double UsarHabilidad(Habilidad habilidad)
+    {
+        if (_manaActual < habilidad.CostoRecurso)
+            throw new InvalidOperationException($"Mana insuficiente para usar {habilidad.Nombre}.");
 
-        public override double CalcularDanioAtaqueBásico() => FuerzaBase * 0.8;
-
-        public override double UsarHabilidad(Habilidad habilidad)
-        {
-            if (_manaActual < habilidad.CostoRecurso)
-                throw new InvalidOperationException($"Mana insuficiente para usar {habilidad.Nombre}.");
-
-            _manaActual -= habilidad.CostoRecurso;
-            return habilidad.PotenciaBase * 1.5;
-        }
+        _manaActual -= habilidad.CostoRecurso;
+        return habilidad.PotenciaBase * 1.5;
     }
 }

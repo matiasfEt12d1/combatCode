@@ -1,41 +1,35 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+namespace Persistencia.Entidades;
 
-namespace Persistencia.Entidades
+public class Arquero
 {
-    public class Arquero
+    private int _cantidadFlechas;
+
+    public int CantidadFlechas => _cantidadFlechas;
+
+    public Arquero(string nombre, double vidaMaxima, double fuerzaBase, int flechasIniciales)
+        : base(nombre, vidaMaxima, fuerzaBase)
     {
-        private int _cantidadFlechas;
+        if (flechasIniciales < 0)
+            throw new ArgumentOutOfRangeException(nameof(flechasIniciales), "La cantidad de flechas no puede ser negativa.");
 
-        public int CantidadFlechas => _cantidadFlechas;
+        _cantidadFlechas = flechasIniciales;
+    }
 
-        public Arquero(string nombre, double vidaMaxima, double fuerzaBase, int flechasIniciales)
-            : base(nombre, vidaMaxima, fuerzaBase)
-        {
-            if (flechasIniciales < 0)
-                throw new ArgumentOutOfRangeException(nameof(flechasIniciales), "La cantidad de flechas no puede ser negativa.");
+    public override double CalcularDanioAtaqueBásico()
+    {
+        if (_cantidadFlechas <= 0)
+            return FuerzaBase * 0.5; // Ataque debilitado sin flechas
 
-            _cantidadFlechas = flechasIniciales;
-        }
+        _cantidadFlechas--;
+        return FuerzaBase * 1.4;
+    }
 
-        public override double CalcularDanioAtaqueBásico()
-        {
-            if (_cantidadFlechas <= 0)
-                return FuerzaBase * 0.5; // Ataque debilitado sin flechas
+    public override double UsarHabilidad(Habilidad habilidad)
+    {
+        if (_cantidadFlechas < habilidad.CostoRecurso)
+            throw new InvalidOperationException("No hay suficientes flechas para ejecutar esta habilidad.");
 
-            _cantidadFlechas--;
-            return FuerzaBase * 1.4;
-        }
-
-        public override double UsarHabilidad(Habilidad habilidad)
-        {
-            if (_cantidadFlechas < habilidad.CostoRecurso)
-                throw new InvalidOperationException("No hay suficientes flechas para ejecutar esta habilidad.");
-
-            _cantidadFlechas -= habilidad.CostoRecurso;
-            return FuerzaBase + habilidad.PotenciaBase;
-        }
+        _cantidadFlechas -= habilidad.CostoRecurso;
+        return FuerzaBase + habilidad.PotenciaBase;
     }
 }

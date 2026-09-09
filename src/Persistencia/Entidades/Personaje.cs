@@ -59,7 +59,8 @@ namespace Persistencia.Entidades
 
         public void Curar(double cantidad)
         {
-            if (!EstaVivo) return;
+            if (!EstaVivo)
+                throw new InvalidOperationException($"El personaje {_nombre} está derrotado y no puede recibir curación.");
 
             if (cantidad < 0)
                 throw new ArgumentOutOfRangeException(nameof(cantidad), "La cantidad a curar no puede ser negativa.");

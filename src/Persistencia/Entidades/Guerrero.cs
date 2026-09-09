@@ -14,17 +14,27 @@ public class Guerrero
             _armadura = value;
         }
     }
-
     public Guerrero(string nombre, double vidaMaxima, double fuerzaBase, double armadura)
-        : base(nombre, vidaMaxima, fuerzaBase) => Armadura = armadura;
-
+        : base(nombre, vidaMaxima, fuerzaBase)
+    {
+        Armadura = armadura;
+    }
+    // Polimorfismo: Absorbe el daño utilizando su armadura sin afectar la firma del método base.
     public override void RecibirDano(double cantidad)
     {
         double danioEfectivo = Math.Max(0, cantidad - Armadura);
         base.RecibirDano(danioEfectivo);
     }
-
-    public override double CalcularDanioAtaqueBásico() => FuerzaBase * 1.2;
-
-    public override double UsarHabilidad(Habilidad habilidad) => CalcularDanioAtaqueBásico() + habilidad.PotenciaBase;
+    public override double CalcularDanioAtaqueBásico()
+    {
+        if (!EstaVivo)
+            throw new InvalidOperationException($"El guerrero {Nombre} está derrotado y no puede atacar.");
+        return FuerzaBase * 1.2;
+    }
+    public override double UsarHabilidad(Habilidad habilidad)
+    {
+        if (!EstaVivo)
+            throw new InvalidOperationException($"El guerrero {Nombre} está derrotado y no puede usar habilidades.");
+        return CalcularDanioAtaqueBásico() + habilidad.PotenciaBase;
+    }
 }
