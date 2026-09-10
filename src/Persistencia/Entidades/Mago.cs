@@ -1,6 +1,6 @@
 namespace Persistencia.Entidades;
 
-public class Mago
+public class Mago : Personaje
 {
     private int _manaActual;
     private readonly int _manaMaximo;
@@ -11,13 +11,15 @@ public class Mago
         : base(nombre, vidaMaxima, fuerzaBase)
     {
         if (manaMaximo <= 0)
+        {
             throw new ArgumentOutOfRangeException(nameof(manaMaximo), "El mana máximo debe ser mayor a cero.");
+        }
 
         _manaMaximo = manaMaximo;
         _manaActual = manaMaximo;
     }
 
-    public override double CalcularDanioAtaqueBásico() => FuerzaBase * 0.8;
+    public override double CalcularDanioAtaqueBasico() => FuerzaBase * 0.8;
 
     public override double UsarHabilidad(Habilidad habilidad)
     {

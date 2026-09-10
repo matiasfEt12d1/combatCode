@@ -1,6 +1,6 @@
 namespace Persistencia.Entidades;
 
-public class Asesino
+public class Asesino : Personaje
 {
     private double _probabilidadCritico;
 
@@ -13,7 +13,7 @@ public class Asesino
         _probabilidadCritico = probabilidadCritico;
     }
 
-    public override double CalcularDanioAtaqueBásico()
+    public override double CalcularDanioAtaqueBasico()
     {
         bool esCritico = Random.Shared.NextDouble() <= _probabilidadCritico;
         return esCritico ? FuerzaBase * 2.0 : FuerzaBase;

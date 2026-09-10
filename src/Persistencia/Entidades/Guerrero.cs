@@ -1,6 +1,6 @@
 namespace Persistencia.Entidades;
 
-public class Guerrero
+public class Guerrero : Personaje
 {
     private double _armadura;
 
@@ -25,7 +25,7 @@ public class Guerrero
         double danioEfectivo = Math.Max(0, cantidad - Armadura);
         base.RecibirDano(danioEfectivo);
     }
-    public override double CalcularDanioAtaqueBásico()
+    public override double CalcularDanioAtaqueBasico()
     {
         if (!EstaVivo)
             throw new InvalidOperationException($"El guerrero {Nombre} está derrotado y no puede atacar.");
@@ -35,6 +35,6 @@ public class Guerrero
     {
         if (!EstaVivo)
             throw new InvalidOperationException($"El guerrero {Nombre} está derrotado y no puede usar habilidades.");
-        return CalcularDanioAtaqueBásico() + habilidad.PotenciaBase;
+        return CalcularDanioAtaqueBasico() + habilidad.PotenciaBase;
     }
 }

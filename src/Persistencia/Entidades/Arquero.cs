@@ -1,6 +1,6 @@
 namespace Persistencia.Entidades;
 
-public class Arquero
+public class Arquero : Personaje
 {
     private int _cantidadFlechas;
 
@@ -15,7 +15,7 @@ public class Arquero
         _cantidadFlechas = flechasIniciales;
     }
 
-    public override double CalcularDanioAtaqueBásico()
+    public override double CalcularDanioAtaqueBasico()
     {
         if (_cantidadFlechas <= 0)
             return FuerzaBase * 0.5; // Ataque debilitado sin flechas

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Persistencia.Entidades
 {
-    public class Personaje
+    public abstract class Personaje
     {
         private readonly string _nombre;
         private double _vidaActual;
