@@ -1,3 +1,5 @@
+USE db_combatCode;
+
 DELIMITER //
 
 CREATE FUNCTION fn_ObtenerVictorias (

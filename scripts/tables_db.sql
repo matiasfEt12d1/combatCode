@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS combatCode;
-USE combatCode;
+CREATE DATABASE IF NOT EXISTS db_combatCode;
+USE db_combatCode;
 
 CREATE TABLE Usuarios (
     Id INT AUTO_INCREMENT PRIMARY KEY,
