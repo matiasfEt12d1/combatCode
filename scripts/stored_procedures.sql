@@ -79,3 +79,42 @@ BEGIN
 END //
 
 DELIMITER ;
+
+
+-- TRANSACCIONES
+
+
+DELIMITER //
+
+DROP PROCEDURE IF EXISTS sp_RegistrarBatallaTransaccional //
+
+CREATE PROCEDURE sp_RegistrarBatallaTransaccional (
+    p_Participante1Id INT,
+    p_Participante2Id INT,
+    p_AtacanteInicialId INT
+)
+BEGIN
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        RESIGNAL;
+    END;
+
+    START TRANSACTION;
+
+    INSERT INTO Batallas (FechaInicio, GanadorId) 
+    VALUES (NOW(), NULL);
+    
+    SET @v_BatallaId = LAST_INSERT_ID();
+
+    INSERT INTO BatallaParticipantes (BatallaId, PersonajeId, EsAtacanteInicial)
+    VALUES (@v_BatallaId, p_Participante1Id, (p_Participante1Id = p_AtacanteInicialId));
+
+    INSERT INTO BatallaParticipantes (BatallaId, PersonajeId, EsAtacanteInicial)
+    VALUES (@v_BatallaId, p_Participante2Id, (p_Participante2Id = p_AtacanteInicialId));
+
+    COMMIT;
+END //
+
+DELIMITER ;
