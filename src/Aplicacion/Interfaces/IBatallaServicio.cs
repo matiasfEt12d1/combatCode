@@ -1,13 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+namespace Aplicacion.Interfaces;
 
-namespace Aplicacion.Interfaces
+public interface IBatallaServicio
 {
-    public class IBatallaServicio
-    {
-        void EjecutarRonda(Personaje atacante, Personaje defensor);
-        Personaje IniciarCombate(Personaje combatiente1, Personaje combatiente2);
-    }
+    Task<int> IniciarBatallaAsync(int personaje1Id, int personaje2Id);
+    Task ProcesarFinalBatallaAsync(int batallaId, int ganadorId, int perdedorId, double vidaRestante, int totalRondas, double ultimoGolpe);
 }
