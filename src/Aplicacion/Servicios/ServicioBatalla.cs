@@ -1,47 +1,40 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Aplicacion.Interfaces;
 
-namespace Aplicacion.Servicios
+namespace Aplicacion.Servicios;
+
+public class ServicioBatalla : IBatallaServicio
 {
-    public class ServicioBatalla : IBatallaServicio
+    private readonly IBatallaRepositorio _batallaRepositorio;
+    private readonly IPersonajeRepositorio _personajeRepositorio;
+
+    public ServicioBatalla(IBatallaRepositorio batallaRepositorio, IPersonajeRepositorio personajeRepositorio)
     {
-        public void EjecutarRonda(Personaje atacante, Personaje defensor)
-        {
-            ArgumentNullException.ThrowIfNull(atacante);
-            ArgumentNullException.ThrowIfNull(defensor);
+        _batallaRepositorio = batallaRepositorio;
+        _personajeRepositorio = personajeRepositorio;
+    }
 
-            if (!atacante.EstaVivo)
-                throw new InvalidOperationException($"El atacante {atacante.Nombre} no puede luchar porque está derrotado.");
+    public async Task<int> IniciarBatallaAsync(int personaje1Id, int personaje2Id)
+    {
+        var p1 = await _personajeRepositorio.ObtenerPorIdAsync(personaje1Id);
+        var p2 = await _personajeRepositorio.ObtenerPorIdAsync(personaje2Id);
 
-            if (!defensor.EstaVivo)
-                throw new InvalidOperationException($"El defensor {defensor.Nombre} ya ha sido derrotado.");
+        if (p1 == null || p2 == null)
+            throw new InvalidOperationException("Uno o ambos personajes no existen para iniciar la batalla.");
 
-            double danio = atacante.CalcularDanioAtaqueBásico();
-            defensor.RecibirDano(danio);
-        }
+        // Llama al Stored Procedure mediante el repositorio
+        return await _batallaRepositorio.IniciarBatallaAsync(personaje1Id, personaje2Id);
+    }
 
-        public Personaje IniciarCombate(Personaje combatiente1, Personaje combatiente2)
-        {
-            ArgumentNullException.ThrowIfNull(combatiente1);
-            ArgumentNullException.ThrowIfNull(combatiente2);
-
-            if (ReferenceEquals(combatiente1, combatiente2))
-                throw new ArgumentException("Un personaje no puede luchar contra sí mismo.");
-
-            int turno = 0;
-            while (combatiente1.EstaVivo && combatiente2.EstaVivo)
-            {
-                if (turno % 2 == 0)
-                    EjecutarRonda(combatiente1, combatiente2);
-                else
-                    EjecutarRonda(combatiente2, combatiente1);
-
-                turno++;
-            }
-
-            return combatiente1.EstaVivo ? combatiente1 : combatiente2;
-        }
+    public async Task ProcesarFinalBatallaAsync(int batallaId, int ganadorId, int perdedorId, double vidaRestante, int totalRondas, double ultimoGolpe)
+    {
+        // Ejecuta la transacción atómica de cierre mediante Stored Procedure
+        await _batallaRepositorio.CerrarBatallaTransaccionalAsync(
+            batallaId,
+            ganadorId,
+            perdedorId,
+            vidaRestante,
+            totalRondas,
+            ultimoGolpe
+        );
     }
 }
