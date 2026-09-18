@@ -15,8 +15,16 @@ public class MySqlConnectionFactory : IDbConnectionFactory
     }
 
     public IDbConnection CrearConexionDesarrollo() 
-        => new MySqlConnection(_cadenaDesarrollo);
+    {
+        var conexion = new MySqlConnection(_cadenaDesarrollo);
+        conexion.Open();
+        return conexion;
+    }
 
     public IDbConnection CrearConexionAdministrador() 
-        => new MySqlConnection(_cadenaAdministrador);
+    {
+        var conexion = new MySqlConnection(_cadenaAdministrador);
+        conexion.Open();
+        return conexion;
+    }
 }
