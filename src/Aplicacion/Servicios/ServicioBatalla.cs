@@ -13,6 +13,11 @@ public class ServicioBatalla : IBatallaServicio
         _personajeRepositorio = personajeRepositorio;
     }
 
+    public async Task<int> CrearBatallaAsync(int atacanteId, int defensorId)
+    {
+        return await _batallaRepositorio.IniciarBatallaAsync(atacanteId, defensorId);
+    }
+
     public async Task<int> IniciarBatallaAsync(int personaje1Id, int personaje2Id)
     {
         var p1 = await _personajeRepositorio.ObtenerPorIdAsync(personaje1Id);
