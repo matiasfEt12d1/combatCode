@@ -1,4 +1,5 @@
 using System.Data;
+using Aplicacion.Interfaces;
 using Persistencia.Entidades;
 
 namespace Persistencia.Repositorios;
