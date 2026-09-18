@@ -1,4 +1,5 @@
 using System.Data;
+using Aplicacion.Interfaces;
 using Persistencia.Entidades;
 
 namespace Persistencia.Repositorios;
@@ -19,6 +20,13 @@ public class PersonajeRepositorio : IPersonajeRepositorio
         return await _dapper.QueryFirstAsync<PersonajeTabla>(sql, new { Id = id }, CommandType.Text);
     }
 
+    public async Task<IEnumerable<PersonajeTabla>> ObtenerPorUsuarioIdAsync(int usuarioId)
+    {
+        var sql = "SELECT * FROM Personajes WHERE UsuarioId = @UsuarioId;";
+        
+        return await _dapper.QueryAsync<PersonajeTabla>(sql, new { UsuarioId = usuarioId }, CommandType.Text);
+    }
+
     public async Task<IEnumerable<PersonajeTabla>> ObtenerTodosAsync()
     {
         var sql = "SELECT * FROM Personajes;";
@@ -26,7 +34,7 @@ public class PersonajeRepositorio : IPersonajeRepositorio
         return await _dapper.QueryAsync<PersonajeTabla>(sql, null, CommandType.Text);
     }
 
-    public async Task<int> GuardarAsync(PersonajeTabla personaje)
+    public async Task<int> CrearAsync(PersonajeTabla personaje)
     {
         var parametros = new
         {
